@@ -78,12 +78,12 @@ enum PropertyHint {
 	PROPERTY_HINT_SAVE_FILE, ///< a file path must be passed, hint_text (optionally) is a filter "*.png,*.wav,*.doc,". This opens a save dialog
 	PROPERTY_HINT_GLOBAL_SAVE_FILE, ///< a file path must be passed, hint_text (optionally) is a filter "*.png,*.wav,*.doc,". This opens a save dialog
 	PROPERTY_HINT_INT_IS_OBJECTID, // Deprecated.
-	PROPERTY_HINT_INT_IS_POINTER,
+	PROPERTY_HINT_INT_IS_POINTER,//这是给引擎内部用的？
 	PROPERTY_HINT_ARRAY_TYPE,
 	PROPERTY_HINT_LOCALE_ID,
 	PROPERTY_HINT_LOCALIZABLE_STRING,
-	PROPERTY_HINT_NODE_TYPE, ///< a node object type
-	PROPERTY_HINT_HIDE_QUATERNION_EDIT, /// Only Node3D::transform should hide the quaternion editor.
+	PROPERTY_HINT_NODE_TYPE, ///< 一个node object 类型
+	PROPERTY_HINT_HIDE_QUATERNION_EDIT, /// 只有 Node3D::transform should hide the quaternion editor.
 	PROPERTY_HINT_PASSWORD,
 	PROPERTY_HINT_LAYERS_AVOIDANCE,
 	PROPERTY_HINT_MAX,
@@ -124,13 +124,14 @@ enum PropertyUsageFlags {
 	PROPERTY_USAGE_DEFAULT = PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR,
 	PROPERTY_USAGE_NO_EDITOR = PROPERTY_USAGE_STORAGE,
 };
-
-#define ADD_SIGNAL(m_signal) ::ClassDB::add_signal(get_class_static(), m_signal)
-#define ADD_PROPERTY(m_property, m_setter, m_getter) ::ClassDB::add_property(get_class_static(), m_property, _scs_create(m_setter), _scs_create(m_getter))
+//宏定义 用于简化属性property 信号signal和组group的注册register 过程。每个宏调用ClassDB类的静态方法，这些方法负责将类的信号、属性、数组注册到引擎的内存中
+//使得这些元素在编辑器和运行时可以被访问和修改。
+#define ADD_SIGNAL(m_signal) ::ClassDB::add_signal(get_class_static(), m_signal)//添加信号 参数一是得到类内部的静态变量，参数二是member_signal
+#define ADD_PROPERTY(m_property, m_setter, m_getter) ::ClassDB::add_property(get_class_static(), m_property, _scs_create(m_setter), _scs_create(m_getter))//添加属性 
 #define ADD_PROPERTYI(m_property, m_setter, m_getter, m_index) ::ClassDB::add_property(get_class_static(), m_property, _scs_create(m_setter), _scs_create(m_getter), m_index)
-#define ADD_PROPERTY_DEFAULT(m_property, m_default) ::ClassDB::set_property_default_value(get_class_static(), m_property, m_default)
+#define ADD_PROPERTY_DEFAULT(m_property, m_default) ::ClassDB::set_property_default_value(get_class_static(), m_property, m_default)//add property with default value
 #define ADD_GROUP(m_name, m_prefix) ::ClassDB::add_property_group(get_class_static(), m_name, m_prefix)
-#define ADD_GROUP_INDENT(m_name, m_prefix, m_depth) ::ClassDB::add_property_group(get_class_static(), m_name, m_prefix, m_depth)
+#define ADD_GROUP_INDENT(m_name, m_prefix, m_depth) ::ClassDB::add_property_group(get_class_static(), m_name, m_prefix, m_depth)//添加带有缩进的分组
 #define ADD_SUBGROUP(m_name, m_prefix) ::ClassDB::add_property_subgroup(get_class_static(), m_name, m_prefix)
 #define ADD_SUBGROUP_INDENT(m_name, m_prefix, m_depth) ::ClassDB::add_property_subgroup(get_class_static(), m_name, m_prefix, m_depth)
 #define ADD_LINKED_PROPERTY(m_property, m_linked_property) ::ClassDB::add_linked_property(get_class_static(), m_property, m_linked_property)
